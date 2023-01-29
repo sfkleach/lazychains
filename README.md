@@ -42,7 +42,7 @@ The difference between the two is pictured below. First we can see what happens
 in the example given above where we create the chain using lazychain on 
 "abc".
 
-IMAGE GOES HERE
+![chain](https://user-images.githubusercontent.com/1164439/215340284-4b7b44a7-df32-4b90-b925-f0a395694805.png)
 
 By contrast, we would immediately go to a fully expanded chain if we were to
 simply apply chain:
@@ -55,4 +55,5 @@ chain(['a','b','c'])
 >>> 
 ```
 
-IMAGE GOES HERE
+![lazychain](https://user-images.githubusercontent.com/1164439/215340294-1667798e-dcad-402e-bccb-e0423f1e8ed9.png)
+
