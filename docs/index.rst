@@ -3,14 +3,128 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to lazychains's documentation!
-======================================
+Lazychains - dynamically populated singly linked lists
+======================================================
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+Introduction
+------------
 
+The lazychains package provides support for chains, which are singly linked 
+lists of items whose members are incrementally populated from an iterator. For 
+example, we can construct a Chain of three characters from the iterable "abc" 
+and it initially starts as unexpanded, shown by the three dots:
+
+.. code:: python
+
+   >>> from lazychains import lazychain
+   >>> c = lazychain( "abc")
+   >>> c
+   chain([...])
+
+We can force the expansion of *c* by performing (say) a lookup or by forcing the whole
+chain of items by calling expand:
+
+.. code:: python
+
+   >>> c[1]                   # Force the expansion of the next 2 elements.
+   True
+   >>> c
+   chain(['a','b',...])
+   >>> c.expand()             # Force the expansion of the whole chain.
+   chain(['a','b','c'])
+
+As we will see, chains are generally less efficient than ordinary arrays. So,
+as a default you should definitely carry on using ordinary arrays and tuples
+most of the time. But they have a couple of special features that makes them the 
+perfect choice for some problems.
+
+   * Chains are immutable and hence can safely share their trailing segments.
+   * Chains can make it easy to work with extremely large (or infinite) sequences.
+
+
+Expanded or Unexpanded
+----------------------
+
+When you construct a chain from an iterator, you can choose whether or not
+it should be immediately expanded by calling chain rather than lazychain.
+The difference between the two is pictured below. First we can see what happens
+in the example given above where we create the chain using lazychain on 
+"abc".
+
+.. image:: /_static/images/lazychain.png
+
+By contrast, we would immediately go to a fully expanded chain if we were to
+simply apply chain:
+
+.. code:: python
+
+   >>> from lazychains import chain
+   >>> c = chain( "abc" )
+   >>> c
+   chain(['a','b','c'])
+   >>> 
+
+
+.. image:: /_static/images/chain.png
+
+
+
+
+
+
+Array-Like
+----------
+
+
+
+
+Getting the Best from Chains
+----------------------------
+
+
+
+
+
+
+A chain of items is a sequence of items that is made up of a singly linked list 
+of Chain records. Although singly linked lists are not at all compact in memory 
+and do not support efficient "random" access, there are a variety of situations 
+in which they are uniquely efficient because of their ability to share their
+tail segments.
+
+
+
+
+
+
+
+Each Chain record *either* holds a single item and a pointer to the 
+subsequent chain of items *or* will be an end-of-chain marker *or* 
+holds an iterator that will be run on demand.
+
+Usually they are less compact than arrays or tuples, which is why they
+are less popular. However their ability to share "tails" can sometimes
+help us avoid unnecessary copying, saving time and store. Also, they can 
+easily represent a large or even infinite sequence that is expanded on 
+demand. Here's a typical idioms showing how to efficiently represent all 
+the lines from a file:
+
+.. code:: python
+
+   lines = lazychain( open( 'myfile.txt', 'r' ) )
+   while lines:
+      #
+      # Process one or more lines (not shown)
+      ...
+      lines = lines.tail()
+
+Note how this idiom 'walks' the chain, overwriting the lines variable 
+so as to allow the Chain records to be swiftly reclaimed by the store
+manager.
 
 Indices and tables
 ==================

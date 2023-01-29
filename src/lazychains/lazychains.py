@@ -67,6 +67,16 @@ class Chain(Generic[T]):
                 self._back = False
                 self._front = None
         return self._back is not False
+
+    def is_expanded( self ) -> bool:
+        """
+        Returns True if the Chain node is expanded and either the member is 
+        already cached or the node represents the empty list. Returns False if
+        the Chain node will need to run an iterator to determine its contents.
+        This should hardly ever be used in application programs. However it
+        can be useful when trying to debug.
+        """
+        return self._back is not True
         
     def head( self ) -> T:
         """
@@ -135,6 +145,10 @@ class Chain(Generic[T]):
         raise Exception('Chain too short to take k-th element')
 
     def len_is_at_least( self, n:int ) -> bool:
+        """
+        Returns True if the chain is at least n items in length. This avoids
+        expanding the whole chain. Otherwise returns False.
+        """
         c = self
         while n > 0:
             if not c:
@@ -144,12 +158,25 @@ class Chain(Generic[T]):
         return True
 
     def len_is_more_than( self, n:int ) -> bool:
+        """
+        Returns True if the chain is more than n in length. This avoids
+        expanding the whole chain. Otherwise returns False.
+        """
         return self.len_at_least( n + 1)
 
     def len_is_at_most( self, n:int ) -> bool:
+        """
+        Returns True if the chain has length at most n. This avoids
+        expanding the whole chain. Otherwise returns False.
+        """
         return not self.len_is_more_than( n )
 
     def len_is_less_than( self, n:int ) -> bool:
+        """
+        Returns True if the length of the chain is less than n. This avoids
+        expanding the whole chain. Otherwise returns False.
+        """
+
         return not self.len_is_at_least( n )
 
     def __contains__( self, x:T ) -> bool:
@@ -165,7 +192,7 @@ class Chain(Generic[T]):
 
     def expand( self ):
         """
-        Force the expansion of the chain. 
+        Force the expansion of the chain, returning the chain.
         """
         c = self
         while c:
@@ -198,7 +225,15 @@ class Chain(Generic[T]):
         return c.head()
 
     def __repr__( self ):
-        return f"chain([{','.join(map(repr,self))}])"
+        items = []
+        c = self
+        while c.is_expanded() and c:
+            items.append( repr( c._front ) )
+            c = c._back
+        if not c.is_expanded():
+            items.append('...')    
+        return f"chain([{','.join(items)}])"
+
 
 """
 We commonly construct empty chains, which are immutable. So we can (and should) 
