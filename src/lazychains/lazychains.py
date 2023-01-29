@@ -233,7 +233,7 @@ class Chain(Generic[T]):
         elif n < 0:
             L = len( self )
             idx = L + n
-            if idx > 0:
+            if idx >= 0:
                 return self.__getitem__( idx )
             else:
                 raise IndexError(f'Negative index is out of bounds for chain: {n}')
