@@ -71,11 +71,6 @@ simply apply chain:
 
 .. image:: /_static/images/chain.png
 
-
-
-
-
-
 Array-Like
 ----------
 
@@ -84,27 +79,6 @@ Array-Like
 
 Getting the Best from Chains
 ----------------------------
-
-
-
-
-
-
-A chain of items is a sequence of items that is made up of a singly linked list 
-of Chain records. Although singly linked lists are not at all compact in memory 
-and do not support efficient "random" access, there are a variety of situations 
-in which they are uniquely efficient because of their ability to share their
-tail segments.
-
-
-
-
-
-
-
-Each Chain record *either* holds a single item and a pointer to the 
-subsequent chain of items *or* will be an end-of-chain marker *or* 
-holds an iterator that will be run on demand.
 
 Usually they are less compact than arrays or tuples, which is why they
 are less popular. However their ability to share "tails" can sometimes
@@ -125,6 +99,59 @@ the lines from a file:
 Note how this idiom 'walks' the chain, overwriting the lines variable 
 so as to allow the Chain records to be swiftly reclaimed by the store
 manager.
+
+Working with Large Chains
+-------------------------
+
+Chains are relatively bulky and quite possibly extremely long (e.g. all the 
+tokens of a file). As a consequence we want to take advantage of the fact that
+they are incrementally populated. In order to do this, we have to ensure that
+we overwrite any references to the start of the original chain. 
+
+For example, we might want to iterate over all the tokens of a file, expanding
+macros as we go. This is the kind of code that we would write.
+
+.. code:: python
+
+   def tokens( srcfile ):
+      with open( srcfile, 'r' ) as src:
+         for line in src:
+            yield from line.split()
+
+   def process_tokens( srcfile ):
+      tokchain = lazychain( tokens( srcfile ) )
+      while tokchain:
+         tok = tokchain.head()
+         tokchain = tokchain.tail()
+         if tok in MACROS:       # MACROS[tok] will be a list of tokens to substitute.
+            chain( MACROS[tok] ) + tokchain
+         else:
+            do_process( tok )    # Whatever we wanted to do.
+
+
+As we progress down the chain of tokens, the chain will grow bigger and bigger.
+By overwriting the 'tokchain' variable, we lose all references to the old Chain
+object. This will allow the Python store manager to promptly reclaim the object.
+
+Implementation Note
+~~~~~~~~~~~~~~~~~~~
+
+Once the Chain is expanded, it loses all references to the underlying iterator.
+This is an important implementation detail that makes lazychains practical.
+
+How does this work? Hopefully you can see that Chain objects have one of three 
+possible states at any one time:
+
+  * Unexpanded - with a reference to an iterator.
+  * Expanded and non-empty - with references to the member and the remainder of 
+    the chain, which is just another Chain object. The reference to the 
+    iterator is overwritten.
+  * Expanded but empty - and references are cleared.
+
+We arrange that only the unexpanded node at the end of a chain retains a 
+reference to the iterator. Once the list is expanded, there are no unexpanded
+nodes and hence no references. The iterator can then be garbage collected.
+
 
 Indices and tables
 ==================
