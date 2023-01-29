@@ -5,28 +5,28 @@ that support the lazy expansion of iterators. For example, we can construct a
 Chain of three characters from the iterable "abc" and it initially starts as 
 unexpanded, shown by the three dots:
 
-.. code:: python
-
-   >>> from lazychains import lazychain
-   >>> c = lazychain( "abc")
-   >>> c
-   chain([...])
+```py
+>>> from lazychains import lazychain
+>>> c = lazychain( "abc")
+>>> c
+chain([...])
+```
 
 We can force the expansion of *c* by performing (say) a lookup or by forcing the whole
 chain of items by calling expand:
 
-.. code:: python
+```py
+>>> c[1]                   # Force the expansion of the next 2 elements.
+True
+>>> c
+chain(['a','b',...])
+>>> c.expand()             # Force the expansion of the whole chain.
+chain(['a','b','c'])
+```
 
-   >>> c[1]                   # Force the expansion of the next 2 elements.
-   True
-   >>> c
-   chain(['a','b',...])
-   >>> c.expand()             # Force the expansion of the whole chain.
-   chain(['a','b','c'])
-
-As we will see, chains are generally less efficient than ordinary arrays. So,
-as a default you should definitely carry on using ordinary arrays and tuples
-most of the time. But they have a couple of special features that makes them the 
+Chain are typically a lot less efficient than using ordinary arrays. So,
+almost all the time you should carry on using ordinary arrays and/or tuples.
+But Chains have a couple of special features that makes them the 
 perfect choice for some problems.
 
    * Chains are immutable and hence can safely share their trailing segments.
@@ -47,13 +47,12 @@ IMAGE GOES HERE
 By contrast, we would immediately go to a fully expanded chain if we were to
 simply apply chain:
 
-.. code:: python
-
-   >>> from lazychains import chain
-   >>> c = chain( "abc" )
-   >>> c
-   chain(['a','b','c'])
-   >>> 
-
+```py
+>>> from lazychains import chain
+>>> c = chain( "abc" )
+>>> c
+chain(['a','b','c'])
+>>> 
+```
 
 IMAGE GOES HERE
