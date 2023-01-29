@@ -1,0 +1,228 @@
+from typing import TypeVar, Generic
+from collections.abc import Iterable
+
+T = TypeVar('T')
+
+class Chain(Generic[T]):
+    """
+    A chain of items is made up of a singly linked list of Chain records. 
+    Each Chain record *either* holds a single item and a pointer to the 
+    subsequent chain of items *or* will be an end-of-chain marker *or* 
+    holds an iterator that will be run on demand.
+
+    Usually they are less compact than arrays or tuples, which is why they
+    are less popular. However their ability to share "tails" can sometimes
+    help us avoid unnecessary copying, saving time and store. Also, they can 
+    easily represent a large or even infinite sequence that is expanded on 
+    demand. Here's a typical idioms showing how to efficiently represent all 
+    the lines from a file:
+
+    .. code:: python
+
+        lines = lazychain( open( 'myfile.txt', 'r' ) )
+        while lines:
+            #
+            # Process one or more lines (not shown)
+            ...
+            lines = lines.tail()
+
+    Note how this idiom 'walks' the chain, overwriting the lines variable 
+    so as to allow the Chain records to be swiftly reclaimed by the store
+    manager.
+    """
+
+    # Implementation note: the _back field is used to represent different 
+    # states of the chain. This implementation technique, borrowed from the
+    # implementation of dynamic lists in Poplog, requires only 2 fields and
+    # has the advantage of overwriting unwanted references to the iterator, 
+    # which therefore is released as soon as the chain is fully expanded.
+    #
+    #   True - this is an unexpanded node with the _front being the iterator
+    #   False - this is an expanded _empty_ node, the front is ignored
+    #   Chain - this is an expended _nonempty_ node, the front is the value
+    #
+    # It is an key fact that after bool(mychain) tests positive, it is safe to 
+    # use _front/_back as synonyms for head()/tail(). Within the class this is 
+    # used pervasively to avoid the overhead of a method call.
+
+    def __init__( self, head: T, tail: 'Chain[T]' ):
+        """Private constructor
+        :meta private:
+        """
+        self._front = head
+        self._back = tail
+
+    def __bool__( self ) -> bool:
+        """
+        True if the chain has any members, otherwise False. Will expand
+        this chain node if required.
+        """
+        if self._back is True:
+            try:
+                item = next( self._front )
+                c = Chain( self._front, True )
+                self._front = item
+                self._back = c
+            except StopIteration:
+                self._back = False
+                self._front = None
+        return self._back is not False
+        
+    def head( self ) -> T:
+        """
+        Returns the first item in the chain.
+        """
+        if self:
+            return self._front
+        else:
+            raise Exception('Trying to take the head of an empty Chain')
+
+    def tail( self ) -> T:
+        """
+        Returns the chain that represents all but the first item. Chains
+        form singly linked lists, so this is a fast operation that always
+        yields the identical object.
+        """
+        if self:
+            return self._back
+        else:
+            raise Exception('Trying to take the tail of an empty Chain')
+
+    def new( self, x: T ) -> 'Chain[T]':
+        """
+        Allocates a new chain node with x as its head and the current chain
+        as its tail.
+        """
+        return Chain( x, self )
+
+    def __iter__( self ):
+        """
+        Returns an iterator over all the items in the chain. This will 
+        gradually expand the underlying chain.
+        """
+        _chain = self
+        while _chain:
+            yield _chain._front
+            _chain = _chain._back
+
+    def __len__( self ) -> int:
+        """
+        Returns a count of the number of items in a chain, which also forces
+        the expansion of the whole chain. If the chain is infinite this will
+        not terminate!
+        """
+        c = self
+        n = 0
+        while c:
+            n += 1
+            c = c._back
+        return n
+
+    def __getitem__( self, k: int ) -> T:
+        """
+        Returns the k-th item in the Chain, provided that the Chain is longer
+        than k. Note that this will traverse k nodes before returning an answer
+        and hence is potentially slow. If the Chain does not have enough elements
+        then an exception is raised.
+        """
+        c = self
+        n = 0
+        while c:
+            if k <= n:
+                return c._head
+            n += 1
+            c = c._back
+        raise Exception('Chain too short to take k-th element')
+
+    def len_is_at_least( self, n:int ) -> bool:
+        c = self
+        while n > 0:
+            if not c:
+                return False
+            c = c._back
+            n -= 1
+        return True
+
+    def len_is_more_than( self, n:int ) -> bool:
+        return self.len_at_least( n + 1)
+
+    def len_is_at_most( self, n:int ) -> bool:
+        return not self.len_is_more_than( n )
+
+    def len_is_less_than( self, n:int ) -> bool:
+        return not self.len_is_at_least( n )
+
+    def __contains__( self, x:T ) -> bool:
+        """
+        Returns True if x is an element of the Chain, otherwise False.
+        """
+        c = self
+        while c:
+            if c._head == x:
+                return True
+            c = c._back
+        return False
+
+    def expand( self ):
+        """
+        Force the expansion of the chain. 
+        """
+        c = self
+        while c:
+            c = c._back
+        return self
+
+    def __add__( self, it: Iterable[T] ) -> 'Chain[T]':
+        """
+        Construct a new chain that consists of the concatenation of all the
+        items in self followed by all the items from it. Note that self is
+        expanded but the supplied iterable/iterator is not.
+        """
+        if not isinstance( it, Chain ):
+            it = Chain( iter(it), True )
+        c = self
+        r = Chain( None, False )
+        while c:
+            r = Chain( c._front, r )
+            c = c._back
+        while r:
+            it = Chain( r._front, it )
+            r = r._back
+        return it
+
+    def __getitem__( self, n ):
+        c = self
+        while n > 0:
+            n -= 1
+            c = c.tail()
+        return c.head()
+
+    def __repr__( self ):
+        return f"chain([{','.join(map(repr,self))}])"
+
+"""
+We commonly construct empty chains, which are immutable. So we can (and should) 
+share a single empty chain where possible. NIL points the value we reuse.
+"""
+NIL = Chain( None, False )
+
+def lazychain( it:Iterable[T]=() ):
+    """
+    Returns an unexpanded chain based on the iterable/iterator. Using this
+    constructor allows you to work with very large or even infinite chains.
+    Note that because this is lazy, subsequent changes to the underlying 
+    iterable maybe incorporated into the chain.
+    """
+    if it == ():
+        return NIL
+    return Chain( iter(it), True )
+
+def chain( it:Iterable[T]=() ):
+    """
+    Returns a fully expanded chain based on the iterable/iterator. This is 
+    useful when you need the chain to be independent of changes in the 
+    underlying iterable.
+    """
+    if it == ():
+        return NIL
+    return lazychain( it ).expand()
