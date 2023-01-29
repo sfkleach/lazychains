@@ -139,7 +139,7 @@ class Chain(Generic[T]):
         n = 0
         while c:
             if k <= n:
-                return c._head
+                return c._front
             n += 1
             c = c._back
         raise Exception('Chain too short to take k-th element')
@@ -185,7 +185,7 @@ class Chain(Generic[T]):
         """
         c = self
         while c:
-            if c._head == x:
+            if c._front == x:
                 return True
             c = c._back
         return False
@@ -217,12 +217,28 @@ class Chain(Generic[T]):
             r = r._back
         return it
 
-    def __getitem__( self, n ):
-        c = self
-        while n > 0:
-            n -= 1
-            c = c.tail()
-        return c.head()
+    def __getitem__( self, n:int ):
+        if n >= 0:
+            c = self
+            while n > 0:
+                if c:
+                    n -= 1
+                    c = c._back
+                else:
+                    raise IndexError(f'Index is out of bounds for chain: {n}')
+            if c:
+                return c._front
+            else:
+                raise IndexError(f'Index is out of bounds for chain: {n}') 
+        elif n < 0:
+            L = len( self )
+            idx = L + n
+            if idx > 0:
+                return self.__getitem__( idx )
+            else:
+                raise IndexError(f'Negative index is out of bounds for chain: {n}')
+        else:
+            raise IndexError(f'Invalid index for chain: {n}')
 
     def __repr__( self ):
         items = []

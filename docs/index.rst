@@ -74,31 +74,23 @@ simply apply chain:
 Array-Like
 ----------
 
+Most array operations work fine on chains. You can index them, take their 
+length, check they are empty with bool(c), concatenate them with +, and check
+if items are members with 'in'. 
 
+However, it is important to keep in mind that these operations often involve
+traversing many nodes of a chain. This is in sharp contrast to arrays, where
+checking the length or getting the length is almost instant. 
+
+It's not all bad news. Iteration and copying is as fast or faster than the 
+same for arrays. And in the next section you will several examples where chains
+can be a better choice.
 
 
 Getting the Best from Chains
 ----------------------------
 
-Usually they are less compact than arrays or tuples, which is why they
-are less popular. However their ability to share "tails" can sometimes
-help us avoid unnecessary copying, saving time and store. Also, they can 
-easily represent a large or even infinite sequence that is expanded on 
-demand. Here's a typical idioms showing how to efficiently represent all 
-the lines from a file:
-
-.. code:: python
-
-   lines = lazychain( open( 'myfile.txt', 'r' ) )
-   while lines:
-      #
-      # Process one or more lines (not shown)
-      ...
-      lines = lines.tail()
-
-Note how this idiom 'walks' the chain, overwriting the lines variable 
-so as to allow the Chain records to be swiftly reclaimed by the store
-manager.
+TO BE COMPLETED
 
 Working with Large Chains
 -------------------------
