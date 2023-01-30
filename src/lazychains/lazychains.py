@@ -128,21 +128,7 @@ class Chain(Generic[T]):
             c = c._back
         return n
 
-    def __getitem__( self, k: int ) -> T:
-        """
-        Returns the k-th item in the Chain, provided that the Chain is longer
-        than k. Note that this will traverse k nodes before returning an answer
-        and hence is potentially slow. If the Chain does not have enough elements
-        then an exception is raised.
-        """
-        c = self
-        n = 0
-        while c:
-            if k <= n:
-                return c._front
-            n += 1
-            c = c._back
-        raise Exception('Chain too short to take k-th element')
+
 
     def len_is_at_least( self, n:int ) -> bool:
         """
@@ -218,14 +204,26 @@ class Chain(Generic[T]):
         return it
 
     def __getitem__( self, n:int ):
+        """
+        Returns the k-th item in the Chain, provided that the Chain is longer
+        than k. Note that this will traverse k nodes before returning an answer
+        and hence is potentially slow. If the Chain does not have enough elements
+        then an exception is raised.
+
+        Negative indexes are accepted and have the usual meaning of indexing
+        from the end. Because this involves calculating the length of the chain,
+        it is inherently slow and obviously unsafe on infinite or extremely long
+        chains.
+        """
         if n >= 0:
             c = self
-            while n > 0:
+            k = n
+            while k > 0:
                 if c:
-                    n -= 1
+                    k -= 1
                     c = c._back
                 else:
-                    raise IndexError(f'Index is out of bounds for chain: {n}')
+                    break
             if c:
                 return c._front
             else:

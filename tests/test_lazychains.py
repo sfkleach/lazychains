@@ -1,11 +1,13 @@
 from lazychains import lazychain
 
-"""
-A quickly generated set of tests to cover the rush in grabbing the name (oops).
-We will backfill these asap.
-"""
 
-def test_basic_functionality():
+
+def test_smoketest_functionality():
+    """
+    A quickly generated test to cover the basic functionality. Done in a rush 
+    following the not-so-great decision to grab the name on PyPI.
+    The tests need backfilling properly.
+    """
     c = lazychain( "abc" )
     assert "a" == c.head() 
     assert "b" == c[1]
@@ -25,4 +27,27 @@ def test_basic_functionality():
     assert c[1] == 'y' and c[-2] == 'z'
     assert c[2] == 'z' and c[-3] == 'y'
     assert c[3] == 'c' and c[-4] == 'x'
-    
+
+def nullary_construction():
+    # Arrange
+    lc = lazychain()
+    sc = chain()
+    # Act
+    len_lc = len(lc)
+    len_sc = len(sc)
+    # Assert
+    assert 0 == len_lc
+    assert 0 == len_sc
+
+def test_negative_indexes():
+    # Arrange
+    c = lazychain( "abc" )
+    # Act
+    x = c[-1]
+    y = c[-2]
+    z = c[-3]
+    # Assert
+    assert x == "c"
+    assert y == "b"
+    assert z == "a"
+
