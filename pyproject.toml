@@ -5,9 +5,9 @@ description = "Singly linked lists with incremental instantiation of iterators"
 authors = ["Stephen Leach <sfkleach@gmail.com>"]
 license = "GPL-3.0-or-later"
 readme="README.md"
-homepage="https://lazylinks.readthedocs.io/en/latest/"
-documentation="https://lazylinks.readthedocs.io/en/latest/"
-repository = "https://github.com/sfkleach/lazylinks"
+homepage="https://lazychains.readthedocs.io/en/latest/"
+documentation="https://lazychains.readthedocs.io/en/latest/"
+repository = "https://github.com/sfkleach/lazychains"
 keywords = ["iterators", "linked list", "single", "lazy"]
 classifiers = [
     "Development Status :: 3 - Alpha",
