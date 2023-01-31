@@ -90,7 +90,77 @@ can be a better choice.
 Getting the Best from Chains
 ----------------------------
 
-TO BE COMPLETED
+Representing Trails
+~~~~~~~~~~~~~~~~~~~
+
+There are a couple operations that chains do very efficiently. The first is
+that it is very quick to add another link to the front of a chain, yielding
+a new chain, that shares but does not affect the old chain.
+
+This comes in very handy when you are doing searches and you want to keep 
+track of the multiple trails that are being explored. For example we might
+have a maze that we are trying to solve. In this example we represent the 
+maze by a function *maze* that, given a location and a move (L, R, U or D), 
+returns the new location - or None if the move is unsuccessful.
+
+.. code:: python
+
+   from lazychains import chain
+   from collections import deque
+
+   def solve( maze, initial_location, target_location ):
+      """
+      This is a simple algorithm for example purposes only.
+      """
+      paths = deque( [ (initial_location, chain() ) ] )
+      while paths:
+         print(len(paths))
+         if len(paths) > 3:
+               print( paths )
+               break
+         ( loc, previous ) = paths.pop()
+         for move in "LRUD":
+               loc1 = maze( loc, move )
+               if loc1 is not None and loc1 not in previous:
+                  extend = previous.new( loc )      # Extend the chain of moves
+                  if loc1 == target_location:
+                     yield previous                 # Found a solution
+                  else:
+                     paths.appendleft( ( loc1, extend ) )
+
+   MAZE = [
+      "###########",
+      "##       ##",
+      "## ##### ##",
+      "## ##X## ##",
+      "## ##    ##",
+      "## ########"
+   ]
+
+   INITIAL = (5, 2)
+   FINAL = (3, 5)
+   MOVES = { "L": (0, -1), "R": (0, 1), "D": (1, 0), "U": (-1, 0) }
+
+   def simple_maze(loc, move):
+      (row, col) = loc
+      try:
+         (rx, cx) = MOVES[move]
+         if MAZE[ row ][ col ] == "#":
+               return None
+         return (row + rx, col + cx)
+      except IndexError:
+         return None
+
+And this is it working:
+
+.. code:: python
+
+   % python3 -i maze.py 
+   >>> next(solve(simple_maze, INITIAL, FINAL))
+   chain(['U','L','L','L','D','D','D','R','R','R','R','R','R','U','U','U','U'])
+   >>> 
+
+
 
 Working with Large Chains
 -------------------------
