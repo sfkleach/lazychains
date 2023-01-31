@@ -90,8 +90,8 @@ can be a better choice.
 Getting the Best from Chains
 ----------------------------
 
-Representing Trails
-~~~~~~~~~~~~~~~~~~~
+Example - Representing Trails
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 There are a couple operations that chains do very efficiently. The first is
 that it is very quick to add another link to the front of a chain, yielding
@@ -103,30 +103,30 @@ have a maze that we are trying to solve. In this example we represent the
 maze by a function *maze* that, given a location and a move (L, R, U or D), 
 returns the new location - or None if the move is unsuccessful.
 
+In this case, we use a chain to keep track of all the previous locations that
+we have visited. Adding a location onto the start of trail gives you a new
+trail very cheaply. 
+
 .. code:: python
 
    from lazychains import chain
    from collections import deque
 
    def solve( maze, initial_location, target_location ):
-      """
-      This is a simple algorithm for example purposes only.
-      """
+      """This is a simple algorithm for example purposes only."""
       paths = deque( [ (initial_location, chain() ) ] )
+      done = set( initial_location )
       while paths:
-         print(len(paths))
-         if len(paths) > 3:
-               print( paths )
-               break
-         ( loc, previous ) = paths.pop()
+         ( loc, moves ) = paths.pop()
          for move in "LRUD":
                loc1 = maze( loc, move )
-               if loc1 is not None and loc1 not in previous:
-                  extend = previous.new( loc )      # Extend the chain of moves
+               if loc1 is not None and loc1 not in done:
+                  done.add(loc1)
+                  moves = moves.new( move )      # Extend the chain of moves
                   if loc1 == target_location:
-                     yield previous                 # Found a solution
+                     yield moves                 # Found a solution
                   else:
-                     paths.appendleft( ( loc1, extend ) )
+                     paths.appendleft( ( loc1, moves ) )
 
    MAZE = [
       "###########",
@@ -159,6 +159,7 @@ And this is it working:
    >>> next(solve(simple_maze, INITIAL, FINAL))
    chain(['U','L','L','L','D','D','D','R','R','R','R','R','R','U','U','U','U'])
    >>> 
+
 
 
 
