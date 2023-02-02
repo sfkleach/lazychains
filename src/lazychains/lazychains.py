@@ -70,12 +70,12 @@ class Chain(Generic[T]):
                     self._front = None
                     break
             elif self._back is Ellipsis:
-                c = self._back()
+                c = self._front()
                 if isinstance( c, Chain ):
                     self._front = c._front
                     self._back = c._back
                 else:
-                    raise Exception(f"Lazyapply did not return a chain: {c}")
+                    raise Exception(f"Lazycall did not return a chain: {c}")
             else:
                 break
 
@@ -90,6 +90,19 @@ class Chain(Generic[T]):
         can be useful when trying to debug.
         """
         return self._back is not True and self._back is not Ellipsis
+
+    def expanded_len( self ):
+        """
+        Returns the number of expanded nodes in the chain. It is not 
+        expected that this would be used in typical programming but it is
+        handy for debugging.
+        """
+        c = self
+        n = 0
+        while c.is_expanded():
+            c = c._back
+            n += 1
+        return n
         
     def head( self ) -> T:
         """
@@ -124,16 +137,40 @@ class Chain(Generic[T]):
         """
         return Chain( x, self )
 
-    def lazyapply( self, f, *args ):
-        return lazyapply( lambda: f( self, *args ) )
+    def lazycall( self, f, *args ):
+        """
+        This is useful when writing recursive lazy functions. It
+        returns a Chain node that represents a deferred call of f( self, *args ).
+        The call must return a Chain. N.B. It may return another lazy-chain but,
+        if so, it will recursively be forced.
+        """
+        return lazycall( lambda: f( self, *args ) )
 
     def map( self, f, *iterables ):
+        """
+        This works exactly like the built in function map except that it
+        returns a Chain rather than an iterable. If you only need an iterable
+        returned just do this: 
+            map( f, chain, *iterables )
+        """
         return lazychain( map( f, self, *iterables ) )
 
     def filter( self, predicate ):
+        """
+        This works exactly like the built in function filter except that it
+        returns a Chain rather than an iterable. If you only need an iterable
+        returned just do this: 
+            filter( f, chain )
+        """
         return lazychain( filter( predicate, self ) )
 
     def zip( self, *iterables, strict=False ):
+        """
+        This works exactly like the built in function zip except that it
+        returns a Chain of tuples rather than an iterable of tuples. If you only 
+        need an iterable returned just do this: 
+            zip( chain, *iterables, strict )
+        """
         return lazychain( zip( self, *iterables, strict=strict ) )
 
     def __iter__( self ):
@@ -305,5 +342,12 @@ def chain( it:Iterable[T]=() ):
         return NIL
     return lazychain( it ).expand()
 
-def lazyapply( f, *args ):
+def lazycall( f, *args ):
+    """
+    This method implements a lazy call of a function f that returns a Chain.
+    This is useful when processing potentially infinite lists. Strictly speaking 
+    it takes a function f that, when applied to *args, returns a Chain. When that
+    Chain is expanded, the function f is automatically called and the resulting
+    Chain overwrites it. If necessary the Chain is repeatedly expanded.
+    """
     return Chain( f, Ellipsis )
