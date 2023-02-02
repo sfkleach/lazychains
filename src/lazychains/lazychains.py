@@ -1,4 +1,4 @@
-from typing import TypeVar, Generic
+from typing import TypeVar, Generic, Tuple
 from collections.abc import Iterable
 
 T = TypeVar('T')
@@ -38,6 +38,7 @@ class Chain(Generic[T]):
     # which therefore is released as soon as the chain is fully expanded.
     #
     #   True - this is an unexpanded node with the _front being the iterator
+    #   Ellipsis - this is an unexpanded node with the _front being a deferred call
     #   False - this is an expanded _empty_ node, the front is ignored
     #   Chain - this is an expended _nonempty_ node, the front is the value
     #
@@ -57,15 +58,27 @@ class Chain(Generic[T]):
         True if the chain has any members, otherwise False. Will expand
         this chain node if required.
         """
-        if self._back is True:
-            try:
-                item = next( self._front )
-                c = Chain( self._front, True )
-                self._front = item
-                self._back = c
-            except StopIteration:
-                self._back = False
-                self._front = None
+        while True:
+            if self._back is True:
+                try:
+                    item = next( self._front )
+                    c = Chain( self._front, True )
+                    self._front = item
+                    self._back = c
+                except StopIteration:
+                    self._back = False
+                    self._front = None
+                    break
+            elif self._back is Ellipsis:
+                c = self._back()
+                if isinstance( c, Chain ):
+                    self._front = c._front
+                    self._back = c._back
+                else:
+                    raise Exception(f"Lazyapply did not return a chain: {c}")
+            else:
+                break
+
         return self._back is not False
 
     def is_expanded( self ) -> bool:
@@ -76,7 +89,7 @@ class Chain(Generic[T]):
         This should hardly ever be used in application programs. However it
         can be useful when trying to debug.
         """
-        return self._back is not True
+        return self._back is not True and self._back is not Ellipsis
         
     def head( self ) -> T:
         """
@@ -98,12 +111,30 @@ class Chain(Generic[T]):
         else:
             raise Exception('Trying to take the tail of an empty Chain')
 
+    def dest( self ) -> Tuple[ T, 'Chain[T]' ]:
+        if self:
+            return self._front, self._back
+        else:
+            raise Exception('Trying to take the head and tail of an empty Chain')
+
     def new( self, x: T ) -> 'Chain[T]':
         """
         Allocates a new chain node with x as its head and the current chain
         as its tail.
         """
         return Chain( x, self )
+
+    def lazyapply( self, f, *args ):
+        return lazyapply( lambda: f( self, *args ) )
+
+    def map( self, f, *iterables ):
+        return lazychain( map( f, self, *iterables ) )
+
+    def filter( self, predicate ):
+        return lazychain( filter( predicate, self ) )
+
+    def zip( self, *iterables, strict=False ):
+        return lazychain( zip( self, *iterables, strict=strict ) )
 
     def __iter__( self ):
         """
@@ -127,8 +158,6 @@ class Chain(Generic[T]):
             n += 1
             c = c._back
         return n
-
-
 
     def len_is_at_least( self, n:int ) -> bool:
         """
@@ -275,3 +304,6 @@ def chain( it:Iterable[T]=() ):
     if it == ():
         return NIL
     return lazychain( it ).expand()
+
+def lazyapply( f, *args ):
+    return Chain( f, Ellipsis )
