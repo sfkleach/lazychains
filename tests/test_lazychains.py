@@ -1,5 +1,4 @@
-from lazychains import lazychain
-
+from lazychains import lazychain, chain
 
 
 def test_smoketest_functionality():
@@ -28,7 +27,7 @@ def test_smoketest_functionality():
     assert c[2] == 'z' and c[-3] == 'y'
     assert c[3] == 'c' and c[-4] == 'x'
 
-def nullary_construction():
+def test_nullary_construction():
     # Arrange
     lc = lazychain()
     sc = chain()
@@ -51,3 +50,12 @@ def test_negative_indexes():
     assert y == "b"
     assert z == "a"
 
+def test_lazyapply():
+    """
+    Turner's Sieve
+    """
+    import itertools
+    def sieve( L ):
+        ( p, t ) = L.dest()
+        t.filter( lambda x: x % p != 0 ).lazyapply( sieve ).new( p )
+    primes = sieve( lazychain( itertools.count(2) ) )
