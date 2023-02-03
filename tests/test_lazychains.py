@@ -50,13 +50,13 @@ def test_negative_indexes():
     assert y == "b"
     assert z == "a"
 
-def test_lazyapply():
+def test_lazycall():
     """
     Turner's Sieve
     """
     import itertools
     def sieve( L ):
         ( p, t ) = L.dest()
-        return t.filter( lambda x: x % p != 0 ).lazyapply( sieve ).new( p )
+        return t.filter( lambda x: x % p != 0 ).lazycall( sieve ).new( p )
     primes = sieve( lazychain( itertools.count(2) ) )
     assert [2,3,5,7,11,13,17,19,23,29,31,37] == list( itertools.islice( primes, 12 ) )
