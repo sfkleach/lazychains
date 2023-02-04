@@ -150,8 +150,7 @@ class Chain(Generic[T]):
         """
         This works exactly like the built in function map except that it
         returns a Chain rather than an iterable. If you only need an iterable
-        returned just do this: 
-            map( f, chain, *iterables )
+        returned just do this: map( f, chain, *iterables )
         """
         return lazychain( map( f, self, *iterables ) )
 
@@ -159,8 +158,7 @@ class Chain(Generic[T]):
         """
         This works exactly like the built in function filter except that it
         returns a Chain rather than an iterable. If you only need an iterable
-        returned just do this: 
-            filter( f, chain )
+        returned just do this: filter( f, chain )
         """
         return lazychain( filter( predicate, self ) )
 
@@ -168,8 +166,7 @@ class Chain(Generic[T]):
         """
         This works exactly like the built in function zip except that it
         returns a Chain of tuples rather than an iterable of tuples. If you only 
-        need an iterable returned just do this: 
-            zip( chain, *iterables, strict )
+        need an iterable returned just do this: zip( chain, *iterables, strict )
         """
         return lazychain( zip( self, *iterables, strict=strict ) )
 
