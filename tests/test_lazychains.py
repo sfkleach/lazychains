@@ -50,6 +50,23 @@ def test_negative_indexes():
     assert y == "b"
     assert z == "a"
 
+def test_dest():
+    # Arrange
+    c = lazychain( "abc" )
+    # Act
+    x, y = c.dest()
+    # Assert
+    assert x == "a"
+    assert not y.is_expanded()
+
+def test_map():
+    # Arrange
+    c0 = lazychain( "abc" )
+    # Act
+    c1 = c0.map( lambda x: x + x )
+    # Assert
+    assert tuple(c1) == ("aa", "bb", "cc")
+
 def test_lazycall():
     """
     Turner's Sieve
