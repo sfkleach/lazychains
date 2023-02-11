@@ -59,13 +59,30 @@ def test_dest():
     assert x == "a"
     assert not y.is_expanded()
 
+def test_expanded_len():
+    # Arrange
+    c = lazychain( "abc" )
+    # Act
+    x, y = c.dest()
+    # Assert
+    assert x == "a"
+    assert not y.is_expanded()    
+
 def test_map():
     # Arrange
-    c0 = lazychain( "abc" )
+    sample = "abcdef"
+    c0 = lazychain( sample )
+    depth = 3
     # Act
-    c1 = c0.map( lambda x: x + x )
+    p = c0.expanded_len()
+    c0.len_is_at_least(depth)
+    q = c0.expanded_len()
+    c0.expand()
+    r = c0.expanded_len()
     # Assert
-    assert tuple(c1) == ("aa", "bb", "cc")
+    assert 0 == p
+    assert depth == q
+    assert len(sample) == r
 
 def test_lazycall():
     """
