@@ -99,7 +99,7 @@ class Chain(Generic[T]):
         """
         c = self
         n = 0
-        while c.is_expanded():
+        while c.is_expanded() and c:
             c = c._back
             n += 1
         return n
