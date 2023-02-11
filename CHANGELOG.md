@@ -2,6 +2,13 @@
 
 Following the style in https://keepachangelog.com/en/1.0.0/
 
+## [0.2.4] Bug fix for expanded_len, 2023-02-03
+
+### Fixed
+
+- `expanded_len` method did not correctly handle fully expanded chains.
+
+
 ## [0.2.3] Lazycall and New Methods, 2023-02-03
 
 ### Added
