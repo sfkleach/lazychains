@@ -10,6 +10,8 @@ Lazychains - dynamically populated singly linked lists
    :maxdepth: 2
    :caption: Contents:
 
+   lazychains
+
 Introduction
 ------------
 
