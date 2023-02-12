@@ -8,7 +8,9 @@ Lazychains - dynamically populated singly linked lists
 
 .. toctree::
    :maxdepth: 2
-   :caption: Table of Contents
+   :caption: Contents:
+
+   lazychains
 
 .. image:: https://dl.circleci.com/status-badge/img/gh/sfkleach/lazychains/tree/main.svg?style=svg
         :target: https://dl.circleci.com/status-badge/redirect/gh/sfkleach/lazychains/tree/main
@@ -17,8 +19,6 @@ Lazychains - dynamically populated singly linked lists
     :target: https://lazychains.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-The lazychains package provides support for `chains <lazychains.html>`_ which are singly linked 
-lists of items whose members are incrementally populated from an iterator.
 
 Introduction
 ------------
