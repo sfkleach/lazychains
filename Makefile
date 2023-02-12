@@ -29,12 +29,22 @@ help:
 	# Valid targets are:
 	#	test 			- runs the unit tests
 	#	docs			- builds Sphinx docs locally
+	#	clean			- removes artefacts
 	#	publish 		- publishes to the PyPi archive.
 	#	publish-to-test - publishes to the Pypi Test archive.
 
 .PHONY: docs
 docs:
 	poetry run make -C docs html
+
+.PHONY: clean
+clean:
+	poetry run make -C docs clean
+
+# Post-installation tests
+.PHONY: test
+test:
+	poetry run pytest tests
 
 # ATM I do not intend for updates of the PyPI archive to be run automagically.
 # So these commands should be run locally before trying to update the PyPI
@@ -49,12 +59,5 @@ publish:
 	poetry publish --build
 
 .PHONY: publish-to-test
-publish-to-test: 
+publish-to-test:
 	poetry publish -r test-pypi --build
-
-
-# Post-installation tests
-.PHONY: test
-test:
-	poetry run pytest tests
-
