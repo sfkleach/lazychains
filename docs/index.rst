@@ -10,7 +10,15 @@ Lazychains - dynamically populated singly linked lists
    :maxdepth: 2
    :caption: Table of Contents
 
-   modules
+.. image:: https://dl.circleci.com/status-badge/img/gh/sfkleach/lazychains/tree/main.svg?style=svg
+        :target: https://dl.circleci.com/status-badge/redirect/gh/sfkleach/lazychains/tree/main
+
+.. image:: https://readthedocs.org/projects/lazychains/badge/?version=latest
+    :target: https://lazychains.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
+The lazychains package provides support for `chains <lazychains.html>`_, which are singly linked 
+lists of items whose members are incrementally populated from an iterator.
 
 Introduction
 ------------
