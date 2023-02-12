@@ -8,9 +8,9 @@ Lazychains - dynamically populated singly linked lists
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Table of Contents
 
-   lazychains
+   modules
 
 Introduction
 ------------
@@ -151,6 +151,8 @@ A Simple Example
 
 Let's suppose we are looking for underlined headings in a plain text file. These 
 are lines that look like this:
+
+..code:: 
 
    This is a heading because it is 'underlined'
    --------------------------------------------
