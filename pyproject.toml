@@ -10,7 +10,7 @@ documentation="https://lazychains.readthedocs.io/en/latest/"
 repository = "https://github.com/sfkleach/lazychains"
 keywords = ["iterators", "linked list", "single", "lazy"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
     "Intended Audience :: Developers",
     "Natural Language :: English",
