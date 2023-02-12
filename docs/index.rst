@@ -17,7 +17,7 @@ Lazychains - dynamically populated singly linked lists
     :target: https://lazychains.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-The lazychains package provides support for `chains <lazychains.html>`_, which are singly linked 
+The lazychains package provides support for `chains <lazychains.html>`_ which are singly linked 
 lists of items whose members are incrementally populated from an iterator.
 
 Introduction
