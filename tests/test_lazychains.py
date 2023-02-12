@@ -3,16 +3,16 @@ from lazychains import lazychain, chain
 
 def test_smoketest_functionality():
     """
-    A quickly generated test to cover the basic functionality. Done in a rush 
+    A quickly generated test to cover the basic functionality. Done in a rush
     following the not-so-great decision to grab the name on PyPI.
     The tests need backfilling properly.
     """
     c = lazychain( "abc" )
-    assert "a" == c.head() 
+    assert "a" == c.head()
     assert "b" == c[1]
     c = c.tail().tail()
     assert not c.is_expanded()
-    assert "c" == c.head() 
+    assert "c" == c.head()
     assert c.is_expanded()
     assert not c.tail()
     c = c.new( "first item" )
@@ -136,7 +136,7 @@ def test_tail():
     # Assert
     assert not y.is_expanded()
     assert 1 == c.expanded_len()
-    assert ["b", "c"] == list(y)  
+    assert ["b", "c"] == list(y)
 
 def test_map():
     # Arrange
@@ -187,6 +187,33 @@ def test_add():
     assert ["a", "b", 0, 1, 2, 3, 4, 5] == x
     assert c_new.tail().tail() is c1
 
+def test_len_is_at_least():
+    # Arrange
+    c = lazychain( "abxyz" )
+    # Assert
+    assert c.len_is_at_least(0) and c.len_is_at_least(5)
+    assert not c.len_is_at_least(6) and not c.len_is_at_least(9999999)
+
+def len_is_more_than():
+    # Arrange
+    c = lazychain( "abxyz" )
+    # Assert
+    assert c.len_is_more_than(0) and c.len_is_more_than(4)
+    assert not c.len_is_more_than(5) and not c.len_is_more_than(9999999)
+
+def test_len_is_at_most():
+    # Arrange
+    c = lazychain( "abxyz" )
+    # Assert
+    assert not c.len_is_at_most(0) and c.len_is_at_most(5)
+    assert c.len_is_at_most(6) and c.len_is_at_most(9999999)
+
+def len_is_less_than():
+    # Arrange
+    c = lazychain( "abxyz" )
+    # Assert
+    assert not c.len_is_less_than(0) and not c.len_is_less_than(5)
+    assert c.len_is_less_than(6) and c.len_is_less_than(9999999)
 
 def test_lazycall():
     """
