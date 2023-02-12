@@ -2,6 +2,17 @@
 
 Following the style in https://keepachangelog.com/en/1.0.0/
 
+## [0.2.4] Bug fix for len_is_more_than, 2023-02-03
+
+### Added
+
+- Reasonable coverage of unit tests
+
+### Fixed
+
+- `len_is_more_than` method referenced an undefined variable.
+
+
 ## [0.2.4] Bug fix for expanded_len, 2023-02-03
 
 ### Fixed

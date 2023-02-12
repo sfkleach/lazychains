@@ -217,7 +217,7 @@ class Chain(Generic[T]):
         Returns True if the chain is more than n in length. This avoids
         expanding the whole chain. Otherwise returns False.
         """
-        return self.len_at_least( n + 1)
+        return self.len_is_at_least( n + 1)
 
     def len_is_at_most( self, n:int ) -> bool:
         """
@@ -231,7 +231,6 @@ class Chain(Generic[T]):
         Returns True if the length of the chain is less than n. This avoids
         expanding the whole chain. Otherwise returns False.
         """
-
         return not self.len_is_at_least( n )
 
     def __contains__( self, x:T ) -> bool:

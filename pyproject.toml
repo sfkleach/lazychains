@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "lazychains"
-version = "0.2.4"
+version = "0.2.5"
 description = "Singly linked lists with incremental instantiation of iterators"
 authors = ["Stephen Leach <sfkleach@gmail.com>"]
 license = "GPL-3.0-or-later"
