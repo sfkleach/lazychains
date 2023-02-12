@@ -144,7 +144,7 @@ class Chain(Generic[T]):
         return Chain( x, self )
 
     def lazycall( self, f, *args ):
-        """
+        r"""
         This is useful when writing recursive lazy functions. It
         returns a Chain node that represents a deferred call of f( self, \*args ).
         The call must return a Chain. N.B. It may return another lazy-chain but,
@@ -153,7 +153,7 @@ class Chain(Generic[T]):
         return lazycall( lambda: f( self, *args ) )
 
     def map( self, f, *iterables ):
-        """
+        r"""
         This works exactly like the built in function map except that it
         returns a Chain rather than an iterable. If you only need an iterable
         returned just do this: map( f, chain, \*iterables )
@@ -169,7 +169,7 @@ class Chain(Generic[T]):
         return lazychain( filter( predicate, self ) )
 
     def zip( self, *iterables, strict=False ):
-        """
+        r"""
         This works exactly like the built in function zip except that it
         returns a Chain of tuples rather than an iterable of tuples. If you only 
         need an iterable returned just do this: zip( chain, \*iterables, strict )
@@ -346,7 +346,7 @@ def chain( it:Iterable[T]=() ):
     return lazychain( it ).expand()
 
 def lazycall( f, *args ):
-    """
+    r"""
     This method implements a lazy call of a function f that returns a Chain.
     This is useful when processing potentially infinite lists. Strictly speaking 
     it takes a function f that, when applied to \*args, returns a Chain. When that
