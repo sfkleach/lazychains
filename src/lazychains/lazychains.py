@@ -1,5 +1,5 @@
-from typing import TypeVar, Generic, Tuple
-from collections.abc import Iterable
+from typing import TypeVar, Generic, Tuple, Union, Any
+from collections.abc import Iterable, Iterator
 
 T = TypeVar('T')
 
@@ -46,7 +46,7 @@ class Chain(Generic[T]):
     # use _front/_back as synonyms for head()/tail(). Within the class this is 
     # used pervasively to avoid the overhead of a method call.
 
-    def __init__( self, head: T, tail: 'Chain[T]' ):
+    def __init__( self, head, tail ):
         """Private constructor
         :meta private:
         """
@@ -62,7 +62,7 @@ class Chain(Generic[T]):
             if self._back is True:
                 try:
                     item = next( self._front )
-                    c = Chain( self._front, True )
+                    c: Chain[T] = Chain( self._front, True )
                     self._front = item
                     self._back = c
                 except StopIteration:
@@ -113,7 +113,7 @@ class Chain(Generic[T]):
         else:
             raise Exception('Trying to take the head of an empty Chain')
 
-    def tail( self ) -> T:
+    def tail( self ) -> 'Chain[T]':
         """
         Returns the chain that represents all but the first item. Chains
         form singly linked lists, so this is a fast operation that always
@@ -262,7 +262,7 @@ class Chain(Generic[T]):
         if not isinstance( it, Chain ):
             it = Chain( iter(it), True )
         c = self
-        r = Chain( None, False )
+        r: Chain[T] = Chain( None, False )
         while c:
             r = Chain( c._front, r )
             c = c._back
@@ -321,9 +321,9 @@ class Chain(Generic[T]):
 We commonly construct empty chains, which are immutable. So we can (and should) 
 share a single empty chain where possible. NIL points the value we reuse.
 """
-NIL = Chain( None, False )
+NIL: Chain[Any] = Chain( None, False )
 
-def lazychain( it:Iterable[T]=() ):
+def lazychain( it:Iterable[T]=() ) -> Chain[T]:
     """
     Returns an unexpanded chain based on the iterable/iterator. Using this
     constructor allows you to work with very large or even infinite chains.
@@ -334,7 +334,7 @@ def lazychain( it:Iterable[T]=() ):
         return NIL
     return Chain( iter(it), True )
 
-def chain( it:Iterable[T]=() ):
+def chain( it:Iterable[T]=() ) -> Chain[T]:
     """
     Returns a fully expanded chain based on the iterable/iterator. This is 
     useful when you need the chain to be independent of changes in the 
@@ -344,7 +344,7 @@ def chain( it:Iterable[T]=() ):
         return NIL
     return lazychain( it ).expand()
 
-def lazycall( f, *args ):
+def lazycall( f, *args ) -> Chain[T]:
     r"""
     This method implements a lazy call of a function f that returns a Chain.
     This is useful when processing potentially infinite lists. Strictly speaking 

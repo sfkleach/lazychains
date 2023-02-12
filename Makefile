@@ -44,6 +44,7 @@ clean:
 # Post-installation tests
 .PHONY: test
 test:
+	poetry run mypy src/lazychains/lazychains.py --check-untyped-defs
 	poetry run pytest tests
 
 # ATM I do not intend for updates of the PyPI archive to be run automagically.
