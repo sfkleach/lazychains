@@ -117,7 +117,7 @@ class Chain(Generic[T]):
         """
         Returns the chain that represents all but the first item. Chains
         form singly linked lists, so this is a fast operation that always
-        yields the identical object.
+        yields the same result when applied to the same chain.
         """
         if self:
             return self._back
@@ -125,6 +125,12 @@ class Chain(Generic[T]):
             raise Exception('Trying to take the tail of an empty Chain')
 
     def dest( self ) -> Tuple[ T, 'Chain[T]' ]:
+        """
+        Returns both the head and tail in one operation. This performs the
+        expansion check exactly once, so is potentially slightly more 
+        efficent - but more importantly it often makes the code easier to
+        read.
+        """
         if self:
             return self._front, self._back
         else:
