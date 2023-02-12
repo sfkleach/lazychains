@@ -14,6 +14,7 @@ project = 'lazychains'
 copyright = '2023, Stephen Leach'
 author = 'Stephen Leach'
 
+
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
