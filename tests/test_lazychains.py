@@ -208,12 +208,39 @@ def test_len_is_at_most():
     assert not c.len_is_at_most(0) and c.len_is_at_most(5)
     assert c.len_is_at_most(6) and c.len_is_at_most(9999999)
 
-def len_is_less_than():
+def test_len_is_less_than():
     # Arrange
     c = lazychain( "abxyz" )
     # Assert
     assert not c.len_is_less_than(0) and not c.len_is_less_than(5)
     assert c.len_is_less_than(6) and c.len_is_less_than(9999999)
+
+def test_in():
+    # Arrange
+    c = lazychain( "abxyz" )
+    # Assert
+    assert "a" in c
+    assert 1 == c.expanded_len()
+    assert "p" not in c
+    assert 5 == c.expanded_len()
+
+def test_expand():
+    # Arrange
+    c = lazychain( "abxyz" )
+    # Act
+    d = c.expand()
+    # Assert
+    assert d is c
+    assert 5 == c.expanded_len()
+
+def test_add():
+    # Arrange
+    sample = "abxyz"
+    c = lazychain( sample )
+    # Act
+    d = c + c
+    # Assert
+    assert [ *sample, *sample ] == list(d)
 
 def test_lazycall():
     """
