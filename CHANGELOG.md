@@ -2,6 +2,13 @@
 
 Following the style in https://keepachangelog.com/en/1.0.0/
 
+## [0.2.7] Updates development packages following vulnerability alert, 2023-05-24
+
+## Changed
+
+- Versions of mypy, sphinx and pytest updated to latest.
+
+
 ## [0.2.6] Fixes type hint, 2023-02-03
 
 ## Added
