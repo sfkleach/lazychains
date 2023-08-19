@@ -33,19 +33,23 @@ help:
 	#	publish 		- publishes to the PyPi archive.
 	#	publish-to-test - publishes to the Pypi Test archive.
 
+# Changes to the way poetry is implemented appears to require an explicit
+# look-up for the poetry command to run inside this makefile.
+POETRY=$(shell command -v poetry)
+
 .PHONY: docs
 docs:
-	poetry run make -C docs html
+	$(POETRY) run make -C docs html
 
 .PHONY: clean
 clean:
-	poetry run make -C docs clean
+	$(POETRY) run make -C docs clean
 
 # Post-installation tests
 .PHONY: test
 test:
-	poetry run mypy src/lazychains/lazychains.py --check-untyped-defs
-	poetry run pytest tests
+	$(POETRY) run mypy src/lazychains/lazychains.py --check-untyped-defs
+	$(POETRY) run pytest tests
 
 # ATM I do not intend for updates of the PyPI archive to be run automagically.
 # So these commands should be run locally before trying to update the PyPI
@@ -57,8 +61,8 @@ test:
 
 .PHONY: publish
 publish:
-	poetry publish --build
+	$(POETRY) publish --build
 
 .PHONY: publish-to-test
 publish-to-test:
-	poetry publish -r test-pypi --build
+	$(POETRY) publish -r test-pypi --build

@@ -2,6 +2,12 @@
 
 Following the style in https://keepachangelog.com/en/1.0.0/
 
+## [0.2.8] Updates poetry.lock following vulnerability alert, 2023-08-19
+
+## Changed
+
+- poetry.lock
+
 ## [0.2.7] Updates development packages following vulnerability alert, 2023-05-24
 
 ## Changed
