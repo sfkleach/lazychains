@@ -39,11 +39,11 @@ POETRY=$(shell command -v poetry)
 
 .PHONY: docs
 docs:
-	$(POETRY) run make -C docs html
+	cd docs && $(POETRY) run make html
 
 .PHONY: clean
 clean:
-	$(POETRY) run make -C docs clean
+	cd docs && $(POETRY) run make clean
 
 # Post-installation tests
 .PHONY: test
