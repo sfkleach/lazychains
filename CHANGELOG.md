@@ -2,6 +2,16 @@
 
 Following the style in https://keepachangelog.com/en/1.0.0/
 
+## [0.2.11] Updated dependencies & added Justfile
+
+## Added
+
+- Justfile
+
+## Changed
+
+- poetry.lock
+
 ## [0.2.9] Updates poetry.lock following vulnerability alert, 2023-10-20
 
 ### Changed
