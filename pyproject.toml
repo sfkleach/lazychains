@@ -1,17 +1,15 @@
-[tool.poetry]
+[project]
 name = "lazychains"
-version = "0.2.12"
+version = "0.2.13"
 description = "Singly linked lists with incremental instantiation of iterators"
-authors = ["Stephen Leach <sfkleach@gmail.com>"]
-license = "GPL-3.0-or-later"
-readme="README.md"
-homepage="https://lazychains.readthedocs.io/en/latest/"
-documentation="https://lazychains.readthedocs.io/en/latest/"
-repository = "https://github.com/sfkleach/lazychains"
+authors = [{name = "Stephen Leach", email = "sfkleach@gmail.com"}]
+license = {text = "GPL-3.0-or-later"}
+readme = "README.md"
+requires-python = ">=3.12"
 keywords = ["iterators", "linked list", "single", "lazy"]
 classifiers = [
     "Development Status :: 4 - Beta",
-    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     "Intended Audience :: Developers",
     "Natural Language :: English",
     "Operating System :: OS Independent",
@@ -20,14 +18,21 @@ classifiers = [
     "Typing :: Typed"
 ]
 
-[tool.poetry.dependencies]
-python = "^3.10"
+[project.urls]
+Homepage = "https://lazychains.readthedocs.io/en/latest/"
+Documentation = "https://lazychains.readthedocs.io/en/latest/"
+Repository = "https://github.com/sfkleach/lazychains"
 
-[tool.poetry.dev-dependencies]
-pytest = "^7.4.4"
-Sphinx = "^7.0.1"
-mypy = "^1.3.0"
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+    "mypy>=2.1.0",
+    "Sphinx>=9.1.0",
+]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/lazychains"]

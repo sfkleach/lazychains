@@ -2,6 +2,15 @@
 
 Following the style in https://keepachangelog.com/en/1.0.0/
 
+## [0.2.13] Switch to uv and updated dependencies, 2026-05-18
+
+### Changed
+
+- Switched from poetry to uv
+- Updated dependencies
+- Switched from CircleCI to GitHub CI workflow & added release workflow
+- Removed Makefile in favour of using `just` in the workflows
+
 ## [0.2.12] Updates poetry.lock following vulnerability alert, 2024-08-13
 
 ## Changed

@@ -1,4 +1,5 @@
 from lazychains import lazychain, chain
+from lazychains.lazychains import Chain
 
 
 def test_smoketest_functionality():
@@ -29,8 +30,8 @@ def test_smoketest_functionality():
 
 def test_nullary_construction():
     # Arrange
-    lc = lazychain()
-    sc = chain()
+    lc: Chain[int] = lazychain()
+    sc: Chain[int] = chain()
     # Act
     len_lc = len(lc)
     len_sc = len(sc)
@@ -50,8 +51,8 @@ def test_nonnullary_construction():
 
 def test_new():
     # Arrange
-    lc0 = lazychain()
-    sc0 = chain()
+    lc0: Chain[int] = lazychain()
+    sc0: Chain[int] = chain()
     # Act
     lc1 = lc0.new(99)
     sc1 = sc0.new(88)
@@ -233,7 +234,7 @@ def test_expand():
     assert d is c
     assert 5 == c.expanded_len()
 
-def test_add():
+def test_add_self():
     # Arrange
     sample = "abxyz"
     c = lazychain( sample )
