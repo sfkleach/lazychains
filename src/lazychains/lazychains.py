@@ -50,8 +50,8 @@ class Chain(Generic[T]):
         """Private constructor
         :meta private:
         """
-        self._front = head
-        self._back = tail
+        self._front: Any = head
+        self._back: Any = tail
 
     def __bool__( self ) -> bool:
         """

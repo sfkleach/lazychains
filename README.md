@@ -1,6 +1,6 @@
 # Package Description
 
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/sfkleach/lazychains/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/sfkleach/lazychains/tree/main) [![Documentation Status](https://readthedocs.org/projects/lazychains/badge/?version=latest)](https://lazychains.readthedocs.io/en/latest/?badge=latest)
+[![CI](https://github.com/sfkleach/lazychains/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/sfkleach/lazychains/actions/workflows/ci.yml) [![Documentation Status](https://readthedocs.org/projects/lazychains/badge/?version=latest)](https://lazychains.readthedocs.io/en/latest/?badge=latest)
 
 A Python library to provide "chains", which are Lisp-like singly linked lists 
 that support the lazy expansion of iterators. For example, we can construct a 
