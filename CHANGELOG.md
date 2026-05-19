@@ -2,6 +2,12 @@
 
 Following the style in https://keepachangelog.com/en/1.0.0/
 
+## [0.3.0] Drop support for Python 3.10 and 3.11, 2026-05-19
+
+### Changed
+
+- Minimum supported Python version raised to 3.12
+
 ## [0.2.13] Switch to uv and updated dependencies, 2026-05-18
 
 ### Changed
