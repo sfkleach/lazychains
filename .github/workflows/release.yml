@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
-      - uses: extractions/setup-just@v2
+      - uses: extractions/setup-just@v4
 
       - name: Check CHANGELOG matches tag
         run: bash scripts/pre-release-check.sh "${GITHUB_REF_NAME#v}"
