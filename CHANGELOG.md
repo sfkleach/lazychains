@@ -19,17 +19,17 @@ Following the style in https://keepachangelog.com/en/1.0.0/
 
 ## [0.2.12] Updates poetry.lock following vulnerability alert, 2024-08-13
 
-## Changed
+### Changed
 
 - poetry.lock
 
 ## [0.2.11] Updated dependencies & added Justfile
 
-## Added
+### Added
 
 - Justfile
 
-## Changed
+### Changed
 
 - poetry.lock
 
