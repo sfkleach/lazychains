@@ -47,5 +47,4 @@ jobs:
             dist/*
 
       - name: Publish to PyPI
-        # Requires UV_PUBLISH_TOKEN secret configured with PyPI API token
         run: uv publish --trusted-publishing always
