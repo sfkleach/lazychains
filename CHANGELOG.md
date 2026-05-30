@@ -2,6 +2,13 @@
 
 Following the style in https://keepachangelog.com/en/1.0.0/
 
+## [0.3.1] Switch to trusted publication, 2026-05-30
+
+### Added
+
+- The origin repo is now a trusted publisher, so will cause all
+  the PyPI links to be verified.
+
 ## [0.3.0] Drop support for Python 3.10 and 3.11, 2026-05-19
 
 ### Changed
